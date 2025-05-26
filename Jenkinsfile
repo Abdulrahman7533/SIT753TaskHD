@@ -1,40 +1,47 @@
 pipeline {
   agent any
+
   stages {
+
     stage('Build') {
       steps {
         echo 'Building the Docker image...'
         sh 'docker build -t doctor-app .'
       }
     }
+
     stage('Test') {
       steps {
         echo 'Running tests...'
-        sh 'npm install'
-        sh 'npm test || true'
+        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm install'
+        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm test || true'
       }
     }
+
     stage('Code Quality') {
       steps {
-        echo 'Running ESLint for code quality...'
-        sh 'npx eslint index.js || true'
+        echo 'Running ESLint...'
+        sh 'docker run --rm -v $PWD:/app -w /app node:18 npx eslint index.js || true'
       }
     }
+
     stage('Security') {
       steps {
-        echo 'Running npm audit...'
-        sh 'npm audit || true'
+        echo 'Running Security Audit...'
+        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm audit || true'
       }
     }
+
     stage('Deploy to Test') {
       steps {
-        echo 'Deploying to test environment (port 3000)...'
+        echo 'Deploying to test environment...'
         sh 'docker run -d -p 3000:3000 --name doctor-test doctor-app || true'
       }
     }
+
     stage('Release to Production') {
       steps {
-        echo 'Releasing to production (port 8080)...'
+        echo 'Releasing to production...'
         sh '''
           docker stop doctor-test || true
           docker rm doctor-test || true
@@ -42,5 +49,6 @@ pipeline {
         '''
       }
     }
+
   }
 }
