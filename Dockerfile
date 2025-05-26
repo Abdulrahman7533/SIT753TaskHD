@@ -11,9 +11,9 @@ COPY . .
 RUN npx eslint index.js || true
 
 # Run security scan
-RUN npm audit || true
+RUN npm audit --audit-level=low || true
 
 # Run tests
-RUN npm test || true
+RUN npm test --ci || true
 
 CMD ["node", "index.js"]
