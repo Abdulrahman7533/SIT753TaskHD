@@ -28,21 +28,21 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Running tests...'
-        sh 'docker run --rm -e NODE_ENV=test -v ${WORKSPACE}/project_772:/app -w /app node:18 npm test --ci || true'
+        sh 'docker run --rm doctor-app npm test --ci || true'
       }
     }
 
     stage('Code Quality') {
       steps {
         echo 'Running ESLint...'
-        sh 'docker run --rm -v ${WORKSPACE}/project_772:/app -w /app node:18 npx eslint index.js || true'
+        sh 'docker run --rm doctor-app npx eslint index.js || true'
       }
     }
 
     stage('Security') {
       steps {
         echo 'Running Security Audit...'
-        sh 'docker run --rm -v ${WORKSPACE}/project_772:/app -w /app node:18 npm audit --audit-level=low || true'
+        sh 'docker run --rm doctor-app npm audit --audit-level=low || true'
       }
     }
 
