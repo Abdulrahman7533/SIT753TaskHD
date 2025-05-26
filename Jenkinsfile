@@ -16,7 +16,7 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Running tests...'
-        sh 'docker run --rm -e NODE_ENV=test -v .:/app -w /app node:18 npm test --ci || true'
+        sh 'docker run --rm -e NODE_ENV=test -v ${WORKSPACE}:/app -w /app node:18 npm test --ci || true'
 
       }
     }
@@ -24,14 +24,14 @@ pipeline {
     stage('Code Quality') {
       steps {
         echo 'Running ESLint...'
-        sh 'docker run --rm -v .:/app -w /app node:18 npx eslint index.js || true'
+        sh 'docker run --rm -v ${WORKSPACE}:/app -w /app node:18 npx eslint index.js || true'
       }
     }
 
     stage('Security') {
       steps {
         echo 'Running Security Audit...'
-        sh 'docker run --rm -v .:/app -w /app node:18 npm audit --audit-level=low || true'
+        sh 'docker run --rm -v ${WORKSPACE}:/app -w /app node:18 npm audit --audit-level=low || true'
       }
     }
 
@@ -46,7 +46,7 @@ pipeline {
       steps {
         echo 'Releasing to production...'
         sh '''
-          ddocker stop doctor-test || true
+          docker stop doctor-test || true
           docker rm doctor-test || true
           docker stop doctor-prod || true
           docker rm doctor-prod || true
