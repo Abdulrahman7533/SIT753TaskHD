@@ -15,10 +15,8 @@ const db = mysql.createConnection({
     database: 'SIT772_7_2C'
 });
 
-
 if (process.env.NODE_ENV === 'test') {
     console.log("Skipping DB connection during test...");
-    module.exports = {}; 
 } else {
     db.connect((err) => {
         if (err) {
@@ -28,15 +26,6 @@ if (process.env.NODE_ENV === 'test') {
         console.log('Connected to the database.');
     });
 }
-
-
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to the database:', err);
-        return;
-    }
-    console.log('Connected to the database.');
-});
 
 app.use(express.static(path.join(__dirname)));
 
@@ -78,32 +67,19 @@ app.post('/add-doctor', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Web server running at: http://localhost:${port}`);
-    console.log('Type Ctrl+C to shut down the web server');
-});
-
-
-
-
 if (require.main === module) {
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
         console.log(`Web server running at: http://localhost:${port}`);
+        console.log('Type Ctrl+C to shut down the web server');
     });
+
+    if (process.env.NODE_ENV === 'test') {
+        setTimeout(() => {
+            server.close(() => {
+                console.log("Test server closed.");
+            });
+        }, 1000);
+    }
 }
 
 module.exports = app;
-
-const server = app.listen(3000, () => {
-    console.log('Web server running at: http://localhost:3000');
-    console.log('Type Ctrl+C to shut down the web server');
-  });
-  
-  if (process.env.NODE_ENV === 'test') {
-    setTimeout(() => {
-      server.close(() => {
-        console.log("✅ Test server closed.");
-      });
-    }, 1000);
-  }
-  
