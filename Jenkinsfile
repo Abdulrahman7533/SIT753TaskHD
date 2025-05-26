@@ -16,28 +16,28 @@ pipeline {
     stage('Install') {
       steps {
         echo 'Installing dependencies...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm install'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npm install'
       }
     }
 
     stage('Test') {
       steps {
         echo 'Running tests...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm test --ci || true'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npm test --ci || true'
       }
     }
 
     stage('Code Quality') {
       steps {
         echo 'Running ESLint...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npx eslint index.js || true'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npx eslint index.js || true'
       }
     }
 
     stage('Security') {
       steps {
         echo 'Running Security Audit...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm audit --audit-level=low || true'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npm audit --audit-level=low || true'
       }
     }
 

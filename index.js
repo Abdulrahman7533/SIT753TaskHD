@@ -18,9 +18,17 @@ const db = mysql.createConnection({
 
 if (process.env.NODE_ENV === 'test') {
     console.log("Skipping DB connection during test...");
-    module.exports = {};
-    return;
+    module.exports = {}; 
+} else {
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to the database:', err);
+            return;
+        }
+        console.log('Connected to the database.');
+    });
 }
+
 
 db.connect((err) => {
     if (err) {
