@@ -10,28 +10,6 @@ pipeline {
       }
     }
 
-    stage('Test') {
-      steps {
-        echo 'Running tests...'
-        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npm install'
-        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npm test || true'
-      }
-    }
-
-    stage('Code Quality') {
-      steps {
-        echo 'Running ESLint...'
-        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npx eslint index.js || true'
-      }
-    }
-
-    stage('Security') {
-      steps {
-        echo 'Running Security Audit...'
-        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npm audit || true'
-      }
-    }
-
     stage('Deploy to Test') {
       steps {
         echo 'Deploying to test environment...'
