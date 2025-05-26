@@ -23,7 +23,7 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Running tests...'
-        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npm test --ci || true'
+        sh 'docker run --rm -e NODE_ENV=test -v $PWD:/app -w /app node:18 npm test --ci || true'
       }
     }
 

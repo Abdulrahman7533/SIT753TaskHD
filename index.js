@@ -93,3 +93,17 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
+const server = app.listen(3000, () => {
+    console.log('Web server running at: http://localhost:3000');
+    console.log('Type Ctrl+C to shut down the web server');
+  });
+  
+  if (process.env.NODE_ENV === 'test') {
+    setTimeout(() => {
+      server.close(() => {
+        console.log("✅ Test server closed.");
+      });
+    }, 1000);
+  }
+  
