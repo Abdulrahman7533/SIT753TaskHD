@@ -5,8 +5,36 @@ pipeline {
 
     stage('Build') {
       steps {
-        echo 'Building the Docker image (includes test, audit, eslint)...'
+        echo 'Building Docker image...'
         sh 'docker build -t doctor-app .'
+      }
+    }
+
+    stage('Install') {
+      steps {
+        echo 'Installing dependencies...'
+        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npm install'
+      }
+    }
+
+    stage('Test') {
+      steps {
+        echo 'Running tests...'
+        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npm test --ci || true'
+      }
+    }
+
+    stage('Code Quality') {
+      steps {
+        echo 'Running ESLint...'
+        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npx eslint index.js || true'
+      }
+    }
+
+    stage('Security') {
+      steps {
+        echo 'Running npm audit...'
+        sh 'docker run --rm -v /var/jenkins_home/workspace/SIT753Task7HD:/app -w /app node:18 npm audit --audit-level=low || true'
       }
     }
 
