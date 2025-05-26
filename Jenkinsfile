@@ -13,13 +13,6 @@ pipeline {
       }
     }
 
-    stage('Install') {
-      steps {
-        echo 'Installing dependencies...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm install'
-      }
-    }
-
     stage('Test') {
       steps {
         echo 'Running tests...'
