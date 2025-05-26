@@ -13,22 +13,22 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Running tests...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm install'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm test || true'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npm install'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npm test || true'
       }
     }
 
     stage('Code Quality') {
       steps {
         echo 'Running ESLint...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npx eslint index.js || true'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npx eslint index.js || true'
       }
     }
 
     stage('Security') {
       steps {
         echo 'Running Security Audit...'
-        sh 'docker run --rm -v $PWD:/app -w /app node:18 npm audit || true'
+        sh 'docker run --rm -v $PWD/project_772:/app -w /app node:18 npm audit || true'
       }
     }
 
