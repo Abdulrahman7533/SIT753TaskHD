@@ -6,6 +6,18 @@ pipeline {
   }
 
   stages {
+    stage('Cleanup') {
+      steps {
+        echo 'Cleaning up any leftover containers...'
+        sh '''
+          docker stop doctor-test || true
+          docker rm doctor-test || true
+          docker stop doctor-prod || true
+          docker rm doctor-prod || true
+        '''
+      }
+    }
+
     stage('Build') {
       steps {
         echo 'Building Docker image...'
@@ -17,7 +29,6 @@ pipeline {
       steps {
         echo 'Running tests...'
         sh 'docker run --rm -e NODE_ENV=test -v ${WORKSPACE}:/app -w /app node:18 npm test --ci || true'
-
       }
     }
 
